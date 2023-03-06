@@ -24,6 +24,7 @@ import { auth, db } from '../../util/firebase'
 
 const Home = () => {
 	const auth = getAuth()
+	const user = auth.currentUser
 	const [todo, setTodo] = useState()
 	const [todos, setTodos] = useState([])
 
@@ -33,7 +34,7 @@ const Home = () => {
 		const user = auth.currentUser
 
 		if (user) {
-			const q = query(collection(db, 'todos'), where('uid', '==', user.uid))
+			const q = query(collection(db, 'todos'))
 			const querySnapshot = await getDocs(q)
 
 			setTodos(querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })))
@@ -62,32 +63,31 @@ const Home = () => {
 		getListOfTodos()
 	}, [])
 
-	//container: `flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8`
-	//h2-container: `sm:mx-auto sm:w-full sm:max-w-md`
-	//heading: `mt-6 text-center text-3xl font-bold tracking-tight text-gray-900`
-	//todos-wrapper: `mt-8 sm:mx-auto sm:w-full sm:max-w-md`
-	//todos: `'bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10`
-	//form: `space-y-6`
-	//todo: `block text-sm font-medium leading-6 text-gray-900`
-
 	return (
 		<>
+			{/* //container: `flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8` */}
 			<div className='flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8'>
+				{/* //h2-container: `sm:mx-auto sm:w-full sm:max-w-md` */}
 				<div className='sm:mx-auto sm:w-full sm:max-w-md'>
+					{/* //heading: `mt-6 text-center text-3xl font-bold tracking-tight text-gray-900` */}
 					<h2 className='mt-6 text-center text-3xl font-bold tracking-tight text-gray-900'>
 						Add todo
 					</h2>
 				</div>
 
+				{/* //todos-wrapper: `mt-8 sm:mx-auto sm:w-full sm:max-w-md` */}
 				<div className='mt-8 sm:mx-auto sm:w-full sm:max-w-md'>
+					{/* //todos: `'bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10` */}
 					<div className='bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10'>
 						<form
+							//form: `space-y-6`
 							className='space-y-6'
 							onSubmit={addTodo}
 						>
 							<div>
 								<label
 									htmlFor='todo'
+									// todo: `block text-sm font-medium leading-6 text-gray-900`
 									className='block text-sm font-medium leading-6 text-gray-900'
 								>
 									Todo
@@ -119,8 +119,9 @@ const Home = () => {
 						<h1>Todos</h1>
 						<ul className='divide-y divide-gray-200'>
 							{/* The code below should be changed to get the data from the docs */}
+							{console.log(todos)}
 							{todos
-								.filter((todo) => todo.uid === auth.currentUser.uid)
+								.filter((todo) => todo.uid !== user.uid)
 								.map((todo) => {
 									return (
 										<li
@@ -138,7 +139,7 @@ const Home = () => {
 															aria-hidden='true'
 														/>
 														<p className='truncate text-sm font-medium text-gray-900'>
-															{todo.name}
+															{todo.task}
 														</p>
 													</a>
 												</div>
